@@ -29,7 +29,7 @@ def get_student_schedule(student_id):
 
 
 def get_teacher_schedule(teacher_name):
-    statement = ""
+    statement = "CALL Select_Teacher('" + teacher_name + "')"
     return execute_statement(get_database_connection(), statement)
 
 
@@ -37,6 +37,7 @@ userIdentity = ""
 while userIdentity != "student" and userIdentity != "teacher":
     userIdentity = input("What is your identity? (teacher or student)")
     userIdentity = userIdentity.lower()
+    print()
 
 if userIdentity == "student":
     student_id = input("Enter a student ID: ")
