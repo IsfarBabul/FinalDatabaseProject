@@ -1,6 +1,6 @@
 import mysql.connector
 
-
+# -------------PART 0: Utility Functions-------------------
 def get_database_connection():
     connection = mysql.connector.connect(user='isfarb2',
                                    password='222499881',
@@ -23,21 +23,50 @@ def execute_statement(connection, statement):
     return results
 
 
-def get_student_schedule(student_id):
-    statement = "CALL Select_Student('" + student_id + "')"
-    return execute_statement(get_database_connection(), statement)
-
-
-def get_teacher_schedule(teacher_id):
-    statement = "CALL Select_Teacher('" + teacher_id + "')"
-    return execute_statement(get_database_connection(), statement)
-
 # check if the user inputted a correct identity
 def verify_user(claimed_identity, possible_identities):
     for possible_identity in possible_identities:
         if claimed_identity == possible_identity:
             return True
     return False
+
+
+# -------------PART 1: Read Only Operations-------------------
+def get_student_schedule(student_id):
+    statement = "CALL Select_Student('" + student_id + "')"
+    return execute_statement(get_database_connection(), statement)
+
+def get_student_grades(student_id, specific_class):
+    print("TODO")
+
+def get_student_overall_grade(student_id):
+    print("TODO; multiply major assessments by 0.7; multiply minor assessments by 0.3; multiply AP class grades by 1.1")
+
+def get_teacher_schedule(teacher_id):
+    statement = "CALL Select_Teacher('" + teacher_id + "')"
+    return execute_statement(get_database_connection(), statement)
+
+def get_class_grades(teacher_id, specific_class, assignment_name):
+    print("TODO")
+
+
+# -------------PART 2: Update Operations for Teachers-------------------
+def update_grade(student_id, specific_class, assignment_name):
+    print("TODO")
+
+def add_assignment(specific_class):
+    print("TODO")
+
+# -------------PART 3: Update Operations for Administrators-------------------
+def add_student(specific_class):
+    print("TODO")
+
+def remove_assignment(specific_class):
+    print("TODO")
+
+def add_class():
+    print("WARNING: THIS IS MEGA HARD")
+
 
 # -------MAIN PROJECT--------
 
