@@ -30,17 +30,71 @@ def verify_user(claimed_identity, possible_identities):
             return True
     return False
 
+def get_student_class_names(student_id):
+    student_schedules = get_student_schedule(student_id)
+    student_classes = []  # ensures only these classes are selected and returns false otherwise
+    for student_schedule in student_schedules:
+        student_classes.append(student_schedule[1])
+    return student_classes
+
+def get_student_class_periods(student_id):
+    student_schedules = get_student_schedule(student_id)
+    class_periods = []  # ensures only these classes are selected and returns false otherwise
+    for student_schedule in student_schedules:
+        class_periods.append(student_schedule[0])
+    return class_periods
 
 # -------------PART 1: Read Only Operations-------------------
-def get_student_schedule(student_id):
+def get_student_schedule(student_id):       # desc: period, name of course, room, teacher
     statement = "CALL Select_Student('" + student_id + "')"
     return execute_statement(get_database_connection(), statement)
 
-def get_student_grades(student_id, specific_class):
-    print("TODO")
+def get_student_grades(student_id, specific_class, period):    # desc: grade, assignment_name, assignment_type, course_type
+    student_classes = get_student_class_names(student_id)
+    class_found = False
+    for student_class in student_classes:
+        if specific_class == student_class:
+            class_found = True
+    if class_found:
+        statement = "CALL Select_Grades('" + student_id + ", " + specific_class + ", " + period + "')"
+        return execute_statement(get_database_connection(), statement)
+    else:
+        return []
 
 def get_student_overall_grade(student_id):
-    print("TODO; multiply major assessments by 0.7; multiply minor assessments by 0.3; multiply AP class grades by 1.1")
+    class_names = get_student_class_names(student_id)   # obtain all class names of a given student
+    class_periods = get_student_class_periods(student_id)
+    grades_in_each_class = []
+    for i in range(len(class_names)):
+        grades_in_each_class.append(get_student_grades(student_id, class_names[i], class_periods[i]))      #find all their grades in each class (also contains assignment name and type as well as course type
+
+    average_grades_in_each_class = []
+    for grades_in_one_class in grades_in_each_class:
+        sum_of_minor_grades = 0
+        minor_grades_count = 0
+        sum_of_major_grades = 0
+        major_grades_count = 0
+        avg_minor = 0
+        avg_major = 0
+        for grade in grades_in_one_class:
+            if grade[2].lower() == 'minor':
+                minor_grades_count += 1
+                sum_of_minor_grades += grade[0]
+            else:
+                major_grades_count += 1
+                sum_of_major_grades += grade[0]
+        avg_minor = sum_of_minor_grades / minor_grades_count
+        avg_major = sum_of_major_grades / major_grades_count
+        average = avg_minor * 0.3 + avg_major * 0.7   # multiply minor by 0.3 and major by 0.7
+        if grades_in_one_class[0][3] == "AP":
+            average *= 1.1      # AP classes have 110% weighting
+        average_grades_in_each_class.append(average)
+
+    overall_grade = 0
+    for average_grade in average_grades_in_each_class:
+        overall_grade += average_grade
+    return overall_grade / len(average_grades_in_each_class)
+
 
 def get_teacher_schedule(teacher_id):
     statement = "CALL Select_Teacher('" + teacher_id + "')"
@@ -90,6 +144,28 @@ if user_identity == "student" or user_identity == "teacher":
             print("Room: ", result[2])
             print("Teacher: ", result[3])
             print()
+
+        print("Would you like to look at your grades for a specific course or your overall grade?")
+        selection = input("(Type the word 'overall' for your overall grade or your class for a specific grade)")
+        select_period = 0
+        if selection.lower() != 'overall':
+            while select_period < 1 or select_period > 10:
+                select_period = input("Input the period (in case you have multiple periods of the same class):")
+        while len(get_student_grades(id_num, selection, select_period)) == 0 and selection.lower() == 'overall':
+            selection = input("(Type the word 'overall' for your overall grade or your class for a specific grade)")
+        if selection.lower() == 'overall':
+            print("Your overall grade is: " + str(get_student_overall_grade(id_num)))
+        else:
+
+            result = get_student_grades(id_num, selection, select_period)  # desc: grade, assignment name, assignment type, course type
+            for result in results:
+                print("Course: ", selection)
+                print("---------")
+                for assignment in result:
+                    print(result[1], ": ", result[0])
+                print()
+
+
     else:
         results = get_teacher_schedule(id_num)
         print()
