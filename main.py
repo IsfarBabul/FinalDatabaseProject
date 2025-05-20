@@ -1,6 +1,8 @@
 import mysql.connector
 
 # -------------PART 0: Utility Functions-------------------
+
+
 def get_database_connection():
     connection = mysql.connector.connect(user='isfarb2',
                                    password='222499881',
@@ -44,10 +46,21 @@ def get_student_class_periods(student_id):
         class_periods.append(student_schedule[0])
     return class_periods
 
+
+def verify_class(student_classes, selection):
+    for student_class in student_classes:
+        if student_class == selection:
+            return True
+    return False
+
+
 # -------------PART 1: Read Only Operations-------------------
+
+
 def get_student_schedule(student_id):       # desc: period, name of course, room, teacher
     statement = "CALL Select_Student('" + student_id + "')"
     return execute_statement(get_database_connection(), statement)
+
 
 def get_student_grades(student_id, specific_class, period):    # desc: grade, assignment_name, assignment_type, course_type
     student_classes = get_student_class_names(student_id)
@@ -56,10 +69,11 @@ def get_student_grades(student_id, specific_class, period):    # desc: grade, as
         if specific_class == student_class:
             class_found = True
     if class_found:
-        statement = "CALL Select_Grades('" + student_id + ", " + specific_class + ", " + period + "')"
+        statement = "CALL Select_Grades(" + str(student_id) + ", '" + specific_class + "', " + str(period) + ")"
         return execute_statement(get_database_connection(), statement)
     else:
         return []
+
 
 def get_student_overall_grade(student_id):
     class_names = get_student_class_names(student_id)   # obtain all class names of a given student
@@ -150,20 +164,34 @@ if user_identity == "student" or user_identity == "teacher":
         select_period = 0
         if selection.lower() != 'overall':
             while select_period < 1 or select_period > 10:
-                select_period = input("Input the period (in case you have multiple periods of the same class):")
-        while len(get_student_grades(id_num, selection, select_period)) == 0 and selection.lower() == 'overall':
-            selection = input("(Type the word 'overall' for your overall grade or your class for a specific grade)")
+                select_period = int(input("Input the period (in case you have multiple periods of the same class):"))
+        print(str(type(select_period)) + str(select_period))  #TEST
+        print(str(type(selection)) + selection)     #TEST
+
+        student_classes = []   # get a hold of all class names a student has
+        for result in results:
+            student_classes.append(result[1])
+
+        while verify_class(student_classes, selection) and selection.lower() == 'overall':
+            selection = input("(Type the word 'overall' for your overall grade or your class for specific grades)")
+
         if selection.lower() == 'overall':
             print("Your overall grade is: " + str(get_student_overall_grade(id_num)))
         else:
-
-            result = get_student_grades(id_num, selection, select_period)  # desc: grade, assignment name, assignment type, course type
-            for result in results:
-                print("Course: ", selection)
-                print("---------")
-                for assignment in result:
-                    print(result[1], ": ", result[0])
-                print()
+            print(id_num)
+            print(selection)
+            print(select_period)
+            gradeInfos = get_student_grades(id_num, selection, select_period)  # desc: grade, assignment name, assignment type, course type
+            print()
+            print("Course: ", selection)
+            sum_of_averages = 0
+            for gradeInfo in gradeInfos:
+                sum_of_averages += gradeInfo[0]
+            course_average = sum_of_averages / len(gradeInfos)
+            print("Course Average: ", course_average)
+            print("---------")
+            for gradeInfo in gradeInfos:
+                print(gradeInfo[1], ": ", gradeInfo[0])
 
 
     else:
