@@ -54,6 +54,12 @@ def verify_class(student_classes, selection):
     return False
 
 
+def grade_average(grades):
+    sum_of_grades = 0
+    for grade in grades:
+        sum_of_grades += grade
+    return sum_of_grades / len(grades)
+
 # -------------PART 1: Read Only Operations-------------------
 
 
@@ -184,11 +190,12 @@ if user_identity == "student" or user_identity == "teacher":
             gradeInfos = get_student_grades(id_num, selection, select_period)  # desc: grade, assignment name, assignment type, course type
             print()
             print("Course: ", selection)
-            sum_of_averages = 0
+            grades = []
             for gradeInfo in gradeInfos:
-                sum_of_averages += gradeInfo[0]
-            course_average = sum_of_averages / len(gradeInfos)
-            print("Course Average: ", course_average)
+                grades.append(gradeInfo[0])
+
+            course_average = grade_average(grades)
+            print("Course Average: ", round(course_average, 2))
             print("---------")
             for gradeInfo in gradeInfos:
                 print(gradeInfo[1], ": ", gradeInfo[0])
