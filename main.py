@@ -54,11 +54,11 @@ def verify_class(student_classes, selection):
     return False
 
 
-def grade_average(grades):
-    sum_of_grades = 0
-    for grade in grades:
-        sum_of_grades += grade
-    return sum_of_grades / len(grades)
+def calculate_average(array):
+    sum_of_nums = 0
+    for element in array:
+        sum_of_nums += element
+    return sum_of_nums / len(array)
 
 # -------------PART 1: Read Only Operations-------------------
 
@@ -68,17 +68,9 @@ def get_student_schedule(student_id):       # desc: period, name of course, room
     return execute_statement(get_database_connection(), statement)
 
 
-def get_student_grades(student_id, specific_class, period):    # desc: grade, assignment_name, assignment_type, course_type
-    student_classes = get_student_class_names(student_id)
-    class_found = False
-    for student_class in student_classes:
-        if specific_class == student_class:
-            class_found = True
-    if class_found:
-        statement = "CALL Select_Grades(" + str(student_id) + ", '" + specific_class + "', " + str(period) + ")"
-        return execute_statement(get_database_connection(), statement)
-    else:
-        return []
+def get_student_grades(student_id, period):    # desc: grade, assignment_name, assignment_type, course_type
+    statement = "CALL Select_Grades(" + str(student_id) + ", " + str(period) + ")"
+    return execute_statement(get_database_connection(), statement)
 
 
 def get_student_overall_grade(student_id):
@@ -123,6 +115,13 @@ def get_teacher_schedule(teacher_id):
 def get_class_grades(teacher_id, specific_class, assignment_name):
     print("TODO")
 
+def calculate_course_average(student_id, period):
+    gradeInfos = get_student_grades(student_id, period)
+    grades = []
+    for gradeInfo in gradeInfos:
+        grades.append(gradeInfo[0])
+    return calculate_average(grades)
+
 
 # -------------PART 2: Update Operations for Teachers-------------------
 def update_grade(student_id, specific_class, assignment_name):
@@ -163,40 +162,27 @@ if user_identity == "student" or user_identity == "teacher":
             print("Course: ", result[1])
             print("Room: ", result[2])
             print("Teacher: ", result[3])
+            print("Course Average: ", calculate_course_average(id_num, result[0]))
             print()
 
         print("Would you like to look at your grades for a specific course or your overall grade?")
-        selection = input("(Type the word 'overall' for your overall grade or your class for a specific grade)")
-        select_period = 0
-        if selection.lower() != 'overall':
-            while select_period < 1 or select_period > 10:
-                select_period = int(input("Input the period (in case you have multiple periods of the same class):"))
-        print(str(type(select_period)) + str(select_period))  #TEST
-        print(str(type(selection)) + selection)     #TEST
+        select_period = -1
+        while select_period < 0 or select_period > 10:
+            select_period = int(input("Input the period of the class you want to look at the grades for (or type 0 for your overall grade):"))
 
-        student_classes = []   # get a hold of all class names a student has
-        for result in results:
-            student_classes.append(result[1])
-
-        while verify_class(student_classes, selection) and selection.lower() == 'overall':
-            selection = input("(Type the word 'overall' for your overall grade or your class for specific grades)")
-
-        if selection.lower() == 'overall':
+        if select_period == 0:
             print("Your overall grade is: " + str(get_student_overall_grade(id_num)))
         else:
             print(id_num)
-            print(selection)
             print(select_period)
-            gradeInfos = get_student_grades(id_num, selection, select_period)  # desc: grade, assignment name, assignment type, course type
-            print()
-            print("Course: ", selection)
-            grades = []
-            for gradeInfo in gradeInfos:
-                grades.append(gradeInfo[0])
 
-            course_average = grade_average(grades)
+            print()
+            print("Course: ", results[select_period - 1][1])
+
+            course_average = calculate_course_average(id_num, select_period)
             print("Course Average: ", round(course_average, 2))
             print("---------")
+            gradeInfos = get_student_grades(id_num, select_period)  # desc: grade, assignment name, assignment type, course type
             for gradeInfo in gradeInfos:
                 print(gradeInfo[1], ": ", gradeInfo[0])
 
