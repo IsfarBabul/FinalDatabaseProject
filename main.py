@@ -32,12 +32,14 @@ def verify_user(claimed_identity, possible_identities):
             return True
     return False
 
+
 def get_student_class_names(student_id):
     student_schedules = get_student_schedule(student_id)
     student_classes = []  # ensures only these classes are selected and returns false otherwise
     for student_schedule in student_schedules:
         student_classes.append(student_schedule[1])
     return student_classes
+
 
 def get_student_class_periods(student_id):
     student_schedules = get_student_schedule(student_id)
@@ -74,46 +76,36 @@ def get_student_grades(student_id, period):    # desc: grade, assignment_name, a
 
 
 def get_student_overall_grade(student_id):
-    class_names = get_student_class_names(student_id)   # obtain all class names of a given student
     class_periods = get_student_class_periods(student_id)
     grades_in_each_class = []
-    for i in range(len(class_names)):
-        grades_in_each_class.append(get_student_grades(student_id, class_names[i], class_periods[i]))      #find all their grades in each class (also contains assignment name and type as well as course type
+    for i in range(len(class_periods)):
+        grades_in_each_class.append(get_student_grades(student_id, class_periods[i]))      #find all their grades in each class (also contains assignment name and type as well as course type
 
     average_grades_in_each_class = []
     for grades_in_one_class in grades_in_each_class:
-        sum_of_minor_grades = 0
-        minor_grades_count = 0
-        sum_of_major_grades = 0
-        major_grades_count = 0
-        avg_minor = 0
-        avg_major = 0
+        minor_grades = []
+        major_grades = []
         for grade in grades_in_one_class:
             if grade[2].lower() == 'minor':
-                minor_grades_count += 1
-                sum_of_minor_grades += grade[0]
+                major_grades.append(grade[0])
             else:
-                major_grades_count += 1
-                sum_of_major_grades += grade[0]
-        avg_minor = sum_of_minor_grades / minor_grades_count
-        avg_major = sum_of_major_grades / major_grades_count
-        average = avg_minor * 0.3 + avg_major * 0.7   # multiply minor by 0.3 and major by 0.7
+                minor_grades.append(grade[0])
+        average = calculate_average(minor_grades) * 0.3 + calculate_average(major_grades) * 0.7
         if grades_in_one_class[0][3] == "AP":
             average *= 1.1      # AP classes have 110% weighting
         average_grades_in_each_class.append(average)
 
-    overall_grade = 0
-    for average_grade in average_grades_in_each_class:
-        overall_grade += average_grade
-    return overall_grade / len(average_grades_in_each_class)
+    return calculate_average(average_grades_in_each_class)
 
 
 def get_teacher_schedule(teacher_id):
     statement = "CALL Select_Teacher('" + teacher_id + "')"
     return execute_statement(get_database_connection(), statement)
 
+
 def get_class_grades(teacher_id, specific_class, assignment_name):
     print("TODO")
+
 
 def calculate_course_average(student_id, period):
     gradeInfos = get_student_grades(student_id, period)
@@ -127,15 +119,19 @@ def calculate_course_average(student_id, period):
 def update_grade(student_id, specific_class, assignment_name):
     print("TODO")
 
+
 def add_assignment(specific_class):
     print("TODO")
 
 # -------------PART 3: Update Operations for Administrators-------------------
+
 def add_student(specific_class):
     print("TODO")
 
+
 def remove_assignment(specific_class):
     print("TODO")
+
 
 def add_class():
     print("WARNING: THIS IS MEGA HARD")
@@ -162,7 +158,7 @@ if user_identity == "student" or user_identity == "teacher":
             print("Course: ", result[1])
             print("Room: ", result[2])
             print("Teacher: ", result[3])
-            print("Course Average: ", calculate_course_average(id_num, result[0]))
+            print("Course Average: ", round(calculate_course_average(id_num, result[0]), 2))
             print()
 
         print("Would you like to look at your grades for a specific course or your overall grade?")
@@ -171,7 +167,7 @@ if user_identity == "student" or user_identity == "teacher":
             select_period = int(input("Input the period of the class you want to look at the grades for (or type 0 for your overall grade):"))
 
         if select_period == 0:
-            print("Your overall grade is: " + str(get_student_overall_grade(id_num)))
+            print("Your overall grade is: " + str(round(get_student_overall_grade(id_num), 2)))
         else:
             print(id_num)
             print(select_period)
@@ -183,6 +179,8 @@ if user_identity == "student" or user_identity == "teacher":
             print("Course Average: ", round(course_average, 2))
             print("---------")
             gradeInfos = get_student_grades(id_num, select_period)  # desc: grade, assignment name, assignment type, course type
+            gradeInfos.reverse()
+
             for gradeInfo in gradeInfos:
                 print(gradeInfo[1], ": ", gradeInfo[0])
 
