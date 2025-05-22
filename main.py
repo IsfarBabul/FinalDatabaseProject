@@ -62,6 +62,12 @@ def calculate_average(array):
         sum_of_nums += element
     return sum_of_nums / len(array)
 
+def dash_buffer(string):
+    dash_buffer = ""
+    for i in range(len(string)):
+        dash_buffer += "-"
+    return dash_buffer
+
 # -------------PART 1: Read Only Operations-------------------
 
 
@@ -74,6 +80,12 @@ def get_student_grades(student_id, period):    # desc: grade, assignment_name, a
     statement = "CALL Select_Grades(" + str(student_id) + ", " + str(period) + ")"
     return execute_statement(get_database_connection(), statement)
 
+def calculate_course_average(student_id, period):
+    gradeInfos = get_student_grades(student_id, period)
+    grades = []
+    for gradeInfo in gradeInfos:
+        grades.append(gradeInfo[0])
+    return calculate_average(grades)
 
 def get_student_overall_grade(student_id):
     class_periods = get_student_class_periods(student_id)
@@ -103,16 +115,9 @@ def get_teacher_schedule(teacher_id):
     return execute_statement(get_database_connection(), statement)
 
 
-def get_class_grades(teacher_id, specific_class, assignment_name):
-    print("TODO")
-
-
-def calculate_course_average(student_id, period):
-    gradeInfos = get_student_grades(student_id, period)
-    grades = []
-    for gradeInfo in gradeInfos:
-        grades.append(gradeInfo[0])
-    return calculate_average(grades)
+def get_class_grades(teacher_id, period):    # ask later: assignment_name_option
+    statement = "CALL Select_Assignments('" + teacher_id + ", " + period + "')"
+    return execute_statement(get_database_connection(), statement)
 
 
 # -------------PART 2: Update Operations for Teachers-------------------
@@ -137,7 +142,14 @@ def add_class():
     print("WARNING: THIS IS MEGA HARD")
 
 
-# -------MAIN PROJECT--------
+# -------MAIN PROJECT-------------------------------------------------------------------------
+# -------MAIN PROJECT-------------------------------------------------------------------------
+# -------MAIN PROJECT-------------------------------------------------------------------------
+# -------MAIN PROJECT-------------------------------------------------------------------------
+# -------MAIN PROJECT-------------------------------------------------------------------------
+# -------MAIN PROJECT-------------------------------------------------------------------------
+# -------MAIN PROJECT-------------------------------------------------------------------------
+# -------MAIN PROJECT-------------------------------------------------------------------------
 
 
 user_identity = ""
@@ -164,7 +176,7 @@ if user_identity == "student" or user_identity == "teacher":
         print("Would you like to look at your grades for a specific course or your overall grade?")
         select_period = -1
         while select_period < 0 or select_period > 10:
-            select_period = int(input("Input the period of the class you want to look at the grades for (or type 0 for your overall grade):"))
+            select_period = int(input("Input the period of the class you want to look at the grades for (or type 0 for your overall grade): "))
 
         if select_period == 0:
             print("Your overall grade is: " + str(round(get_student_overall_grade(id_num), 2)))
@@ -177,7 +189,7 @@ if user_identity == "student" or user_identity == "teacher":
 
             course_average = calculate_course_average(id_num, select_period)
             print("Course Average: ", round(course_average, 2))
-            print("---------")
+            print("----------------" + dash_buffer(round(course_average, 2)))
             gradeInfos = get_student_grades(id_num, select_period)  # desc: grade, assignment name, assignment type, course type
             gradeInfos.reverse()
 
@@ -195,6 +207,36 @@ if user_identity == "student" or user_identity == "teacher":
             print("Course: ", result[2])
             print("Room: ", result[3])
             print()
+
+        print("Would you like to look at your student's grades for a specific course?")
+        select_period = -1
+        while select_period < 1 or select_period > 10:
+            select_period = int(input("Input the period of the class you want to look at the grades for: "))
+
+        gradeInfos = get_class_grades(id_num, select_period)   # desc: grade, assignment_name, student_name, course_name
+
+        print("Course Name: " + gradeInfos[0][3])
+        print("-------------" + dash_buffer(gradeInfos[0][3]))
+
+        print()
+        for i in range(len(gradeInfos)):
+            print(str(i + 1) + ": " + gradeInfos[i][1])
+        print()
+        select_assignment_option = 0
+        while select_assignment_option < 1 or select_assignment_option > len(gradeInfos):
+            select_assignment_option = int(input("Input the number of the assignment you want to look at your student's grades for: "))
+        select_assignment_option -= 1
+
+        print("Assignment Name: " + gradeInfos[select_assignment_option][1])
+        print("-----------------" + dash_buffer(gradeInfos[select_assignment_option][1]))
+
+        for gradeInfo in gradeInfos:
+            print(gradeInfo[2], ": ", gradeInfo[0])
+
+
+
+else:
+    print("You're an administrator.")
 
 
 
