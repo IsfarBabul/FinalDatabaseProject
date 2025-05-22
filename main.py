@@ -116,7 +116,7 @@ def get_teacher_schedule(teacher_id):
 
 
 def get_class_grades(teacher_id, period):    # ask later: assignment_name_option
-    statement = "CALL Select_Assignments('" + teacher_id + ", " + period + "')"
+    statement = "CALL Select_Assignments(" + str(teacher_id) + ", " + str(period) + ")"
     return execute_statement(get_database_connection(), statement)
 
 
@@ -218,7 +218,8 @@ if user_identity == "student" or user_identity == "teacher":
         print("Course Name: " + gradeInfos[0][3])
         print("-------------" + dash_buffer(gradeInfos[0][3]))
 
-        print()
+
+
         for i in range(len(gradeInfos)):
             print(str(i + 1) + ": " + gradeInfos[i][1])
         print()
