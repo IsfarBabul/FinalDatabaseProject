@@ -62,6 +62,7 @@ def calculate_average(array):
         sum_of_nums += element
     return sum_of_nums / len(array)
 
+
 def dash_buffer(string):
     dash_buffer = ""
     for i in range(len(string)):
@@ -190,10 +191,10 @@ if user_identity == "student" or user_identity == "teacher":
             course_average = calculate_course_average(id_num, select_period)
             print("Course Average: ", round(course_average, 2))
             print("----------------" + dash_buffer(round(course_average, 2)))
-            gradeInfos = get_student_grades(id_num, select_period)  # desc: grade, assignment name, assignment type, course type
-            gradeInfos.reverse()
+            grade_infos = get_student_grades(id_num, select_period)  # desc: grade, assignment name, assignment type, course type
+            grade_infos.reverse()
 
-            for gradeInfo in gradeInfos:
+            for gradeInfo in grade_infos:
                 print(gradeInfo[1], ": ", gradeInfo[0])
 
 
@@ -213,26 +214,51 @@ if user_identity == "student" or user_identity == "teacher":
         while select_period < 1 or select_period > 10:
             select_period = int(input("Input the period of the class you want to look at the grades for: "))
 
-        gradeInfos = get_class_grades(id_num, select_period)   # desc: grade, assignment_name, student_name, course_name
+        grade_infos = get_class_grades(id_num, select_period)   # desc: grade, assignment_name, student_name, course_name
 
-        print("Course Name: " + gradeInfos[0][3])
-        print("-------------" + dash_buffer(gradeInfos[0][3]))
+        print("Course Name: " + grade_infos[0][3])
+        print("-------------" + dash_buffer(grade_infos[0][3]))
+
+        # obtain names of each assignment
+        assignment_names = []
+        for grade_info in grade_infos:
+            if len(assignment_names) != 0:
+                isThere = False
+                for assignment_name in assignment_names:
+                    if assignment_name == grade_info[1]:
+                        isThere = True
+                if not isThere:
+                    assignment_names.append(grade_info[1])
+            else:
+                assignment_names.append(grade_info[1])
+
+        # separate gradeInfos into each class
+        assignment_grades = []
+        for i in range(len(assignment_names)):
+            assignment_grades.append([])
+
+        for grade_info in grade_infos:
+            for i in range(len(assignment_names)):
+                if assignment_names[i] == grade_info[1]:
+                    assignment_grades[i].append(grade_info)
 
 
-
-        for i in range(len(gradeInfos)):
-            print(str(i + 1) + ": " + gradeInfos[i][1])
+        for i in range(len(assignment_names)):
+            print(str(i + 1) + ": " + assignment_names[i])
         print()
+
+
+
         select_assignment_option = 0
-        while select_assignment_option < 1 or select_assignment_option > len(gradeInfos):
+        while select_assignment_option < 1 or select_assignment_option > len(grade_infos):
             select_assignment_option = int(input("Input the number of the assignment you want to look at your student's grades for: "))
         select_assignment_option -= 1
 
-        print("Assignment Name: " + gradeInfos[select_assignment_option][1])
-        print("-----------------" + dash_buffer(gradeInfos[select_assignment_option][1]))
+        print("Assignment Name: " + grade_infos[select_assignment_option][1])
+        print("-----------------" + dash_buffer(grade_infos[select_assignment_option][1]))
 
-        for gradeInfo in gradeInfos:
-            print(gradeInfo[2], ": ", gradeInfo[0])
+        for grade_info in assignment_grades[select_assignment_option]:
+            print(grade_info[2], ": ", grade_info[0])
 
 
 
