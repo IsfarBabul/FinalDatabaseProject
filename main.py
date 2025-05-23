@@ -164,6 +164,26 @@ if user_identity == "student" or user_identity == "teacher":
     id_num = input("Enter your ID: ")
 
     if user_identity == "student":
+
+        # WELCOME THE USER!
+
+        option = 0
+
+        while option != 4:
+
+            print("Main Menu")
+            print("1: View your schedule")
+            print("2: View your overall grade")
+            print("3: View your overall grade")
+            print("4: Quit the program")
+            print("")
+            option = input("Choose an Option: ")
+
+
+if user_identity == "student" or user_identity == "teacher":
+    id_num = input("Enter your ID: ")
+
+    if user_identity == "student":
         results = get_student_schedule(id_num)
 
         for result in results:
