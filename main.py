@@ -44,32 +44,21 @@ if user_identity == "student" or user_identity == "teacher":
                     print("Teacher: ", result[3])
                     print("Course Average: ", round(calculate_course_average(id_num, result[0]), 2))
                     print()
-                option = 0
+
             elif option == 2:
                 print("Your overall grade is: " + str(round(get_student_overall_grade(id_num), 2)))
-                print()
-                option = 0
+
             elif option == 3:
                 results = get_student_schedule(id_num)
-                select_period = -1
-                while select_period < 0 or select_period > 10:
-                    select_period = int(input("Input the period of the class to inspect: "))
-                print()
-                print("Course: ", results[select_period - 1][1])
+                chosen_period = select_period()
 
-                course_average = calculate_course_average(id_num, select_period)
-                print("Course Average: ", round(course_average, 2))
-                print("----------------" + dash_buffer(str(round(course_average, 2))))
-                grade_infos = get_student_grades(id_num,
-                                                 select_period)  # desc: grade, assignment name, assignment type, course type
-                grade_infos.reverse()
+                print_student_grades(results, id_num, chosen_period)
 
-                for gradeInfo in grade_infos:
-                    print(gradeInfo[1], ": ", gradeInfo[0])
-                print()
+            if option != 4:
                 option = 0
             else:
                 print("Goodbye, " + student_name + "!")
+
     elif user_identity == "teacher":
         teacher_name = get_teacher_name(id_num)[0][0]
 
@@ -81,6 +70,7 @@ if user_identity == "student" or user_identity == "teacher":
 
         while option != 5:
 
+            print("")
             print("Main Menu")
             print("1: View your schedule")
             print("2: View your student's grades")
@@ -99,35 +89,30 @@ if user_identity == "student" or user_identity == "teacher":
                     print("Course: ", result[2])
                     print("Room: ", result[3])
                     print()
-                option = 0
             elif option == 2:
-                select_period = -1
-                while select_period < 1 or select_period > 10:
-                    select_period = int(input("Input the period of the class you want to look at the grades for: "))
+                chosen_period = select_period()
 
-                grade_infos = get_class_grades(id_num, select_period)  # desc: grade, assignment_name, student_name, course_name
-
-                print("Course Name: " + grade_infos[0][3])
-                print("-------------" + dash_buffer(grade_infos[0][3]))
+                grade_infos = get_class_grades(id_num, chosen_period)  # desc: grade, assignment_name, student_name, course_name
 
                 # obtain names of each assignment
                 assignment_names = obtain_assignment_names(grade_infos)
 
+                # prints assignments in the course offering
+                print_assignments(grade_infos, assignment_names)
+
                 # separate gradeInfos into each class
                 assignment_grades = parse_grades_into_assignments(grade_infos, assignment_names)
 
-                select_assignment_option = 0
-                while select_assignment_option < 1 or select_assignment_option > len(grade_infos):
-                    select_assignment_option = int(
-                        input("Input the number of the assignment you want to look at your student's grades for: "))
-                select_assignment_option -= 1
+                # specify an assignment the user wants
+                select_assignment_option = select_assignment(grade_infos)
 
-                print("Assignment Name: " + grade_infos[select_assignment_option][1])
-                print("-----------------" + dash_buffer(grade_infos[select_assignment_option][1]))
+                # prints grades of each student that has this assignment
+                print_grades(grade_infos, select_assignment_option, assignment_grades)
 
-                for grade_info in assignment_grades[select_assignment_option]:
-                    print(grade_info[2], ": ", grade_info[0])
+            if option != 5:
                 option = 0
+            else:
+                print("Goodbye, " + teacher_name + "!")
 else:
         print()
         print("Welcome, administrator!")
@@ -147,4 +132,8 @@ else:
                 option = int(input("Choose an Option: "))
             print()
 
+            if option != 4:
+                option = 0
+            else:
+                print("Goodbye, administrator!")
 

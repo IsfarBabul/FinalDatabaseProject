@@ -16,12 +16,7 @@ def get_student_class_names(student_id):
     return student_classes
 
 
-def calculate_course_average(student_id, period):
-    gradeInfos = get_student_grades(student_id, period)
-    grades = []
-    for gradeInfo in gradeInfos:
-        grades.append(gradeInfo[0])
-    return calculate_average(grades)
+
 
 def get_student_overall_grade(student_id):
     class_periods = get_student_class_periods(student_id)
@@ -80,12 +75,41 @@ def parse_grades_into_assignments(grade_infos, assignment_names):
         for i in range(len(assignment_names)):
             if assignment_names[i] == grade_info[1]:
                 assignment_grades[i].append(grade_info)
+    return assignment_grades
+
+
+def select_period():
+    period = -1
+    while period < 1 or period > 10:
+        period = int(input("Input your target period: "))
+    return period
+
+
+def print_assignments(grade_infos, assignment_names):
+    print("Course Name: " + grade_infos[0][3])
+    print("-------------" + dash_buffer(grade_infos[0][3]))
 
     for i in range(len(assignment_names)):
         print(str(i + 1) + ": " + assignment_names[i])
     print()
-    return assignment_grades
 
+
+
+def select_assignment(grade_infos):
+    select_assignment_option = 0
+    while select_assignment_option < 1 or select_assignment_option > len(grade_infos):
+        select_assignment_option = int(
+            input("Input the number of your target assignment: "))
+    select_assignment_option -= 1
+    return select_assignment_option
+
+
+def print_grades(grade_infos, select_assignment_option, assignment_grades):
+    print("Assignment Name: " + grade_infos[select_assignment_option][1])
+    print("-----------------" + dash_buffer(grade_infos[select_assignment_option][1]))
+
+    for grade_info in assignment_grades[select_assignment_option]:
+        print(grade_info[2], ": ", grade_info[0])
 
 def update_grade(student_id, specific_class, assignment_name):
     print("TODO")
