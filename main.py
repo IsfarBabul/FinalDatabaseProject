@@ -108,6 +108,44 @@ if user_identity == "student" or user_identity == "teacher":
 
                 # prints grades of each student that has this assignment
                 print_grades(grade_infos, select_assignment_option, assignment_grades)
+            elif option == 3:
+                chosen_period = select_period()
+
+                grade_infos = get_class_grades(id_num, chosen_period)
+
+                # obtain names of each assignment
+                assignment_names = obtain_assignment_names(grade_infos)
+
+                # prints assignments in the course offering
+                print_assignments(grade_infos, assignment_names)
+
+                # separate gradeInfos into each class
+                assignment_grades = parse_grades_into_assignments(grade_infos, assignment_names)
+
+                # specify an assignment the user wants
+                select_assignment_option = select_assignment(grade_infos)
+
+                # prints grades of each student that has this assignment
+                print_grades(grade_infos, select_assignment_option, assignment_grades)
+
+                # the pieces for updating the grade are below
+                select_course_offering_id = grade_infos[select_assignment_option][6]  #PIECE 1/4
+
+                select_assignment_id = grade_infos[select_assignment_option][4]      # PIECE 2/4
+
+                select_student_id = select_student(grade_infos[select_assignment_option])    # PIECE 3/4
+
+                updated_grade = prompt_new_grade()      # PIECE 4/4
+
+                # updates the grade accordingly
+                update_grade(select_student_id, select_course_offering_id, select_assignment_id, updated_grade)
+            elif option == 4:
+                chosen_period = select_period()
+
+                grade_infos = get_class_grades(id_num, chosen_period)
+
+
+
 
             if option != 5:
                 option = 0

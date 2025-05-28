@@ -24,7 +24,7 @@ def get_student_grades(student_id, period):    # desc: grade, assignment_name, a
     return execute_statement(get_database_connection(), statement)
 
 
-def print_student_grades(results, id_num, chosen_period):
+def print_student_grades(results, id_num, chosen_period):   # TODO: FIGURE OUT IF THERE's SOMETHING WRONG HERE
     print("Course: ", results[chosen_period - 1][1])
     course_average = calculate_course_average(id_num, chosen_period)
     print("Course Average: ", round(course_average, 2))

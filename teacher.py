@@ -78,13 +78,6 @@ def parse_grades_into_assignments(grade_infos, assignment_names):
     return assignment_grades
 
 
-def select_period():
-    period = -1
-    while period < 1 or period > 10:
-        period = int(input("Input your target period: "))
-    return period
-
-
 def print_assignments(grade_infos, assignment_names):
     print("Course Name: " + grade_infos[0][3])
     print("-------------" + dash_buffer(grade_infos[0][3]))
@@ -109,10 +102,21 @@ def print_grades(grade_infos, select_assignment_option, assignment_grades):
     print("-----------------" + dash_buffer(grade_infos[select_assignment_option][1]))
 
     for grade_info in assignment_grades[select_assignment_option]:
-        print(grade_info[2], ": ", grade_info[0])
+        print(grade_info[2], " (id: " + grade_info[5] + "): ", grade_info[0])
 
-def update_grade(student_id, specific_class, assignment_name):
-    print("TODO")
+def select_student(grade_infos_of_chosen_assignment):   # no clear way to deal with error handling
+    selected_student_id = int(input("Input Student ID: "))
+    return selected_student_id
+
+def prompt_new_grade():
+    new_grade = 0
+    while new_grade < 75 or new_grade > 100:
+        new_grade = int(input("Input the updated grade (75-100): "))
+    return new_grade
+
+def update_grade(student_id, course_offering_id, assignment_id, updated_grade):
+    statement = "CALL Update_Grade(" + str(assignment_id) + ", " + str(student_id) + ", " + str(course_offering_id) + ", " + str(updated_grade) + ")"
+    return execute_statement(get_database_connection(), statement)
 
 
 def add_assignment(specific_class):
