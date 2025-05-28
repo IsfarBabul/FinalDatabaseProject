@@ -140,6 +140,8 @@ if user_identity == "student" or user_identity == "teacher":
 
                 print("reached")
 
+                print(f"{select_assignment_id} {select_student_id} {select_course_offering_id} {updated_grade}")
+
                 # updates the grade accordingly
                 update_grade(select_student_id, select_course_offering_id, select_assignment_id, updated_grade)
             elif option == 4:
