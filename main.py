@@ -1,4 +1,3 @@
-from operator import truediv
 
 from teacher import *
 from administrator import *
@@ -138,6 +137,8 @@ if user_identity == "student" or user_identity == "teacher":
                 select_student_id = select_student()    # PIECE 3/4
 
                 updated_grade = prompt_new_grade()      # PIECE 4/4
+
+                print("reached")
 
                 # updates the grade accordingly
                 update_grade(select_student_id, select_course_offering_id, select_assignment_id, updated_grade)

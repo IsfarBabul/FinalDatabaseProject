@@ -102,7 +102,7 @@ def print_grades(grade_infos, select_assignment_option, assignment_grades):
     print("-----------------" + dash_buffer(grade_infos[select_assignment_option][1]))
 
     for grade_info in assignment_grades[select_assignment_option]:
-        print(grade_info[2], " (id: " + grade_info[5] + "): ", grade_info[0])
+        print(grade_info[2], " (id: " + str(grade_info[5]) + "): ", grade_info[0])
 
 def select_student():   # no clear way to deal with error handling
     selected_student_id = int(input("Input Student ID: "))
@@ -116,6 +116,7 @@ def prompt_new_grade():
 
 def update_grade(student_id, course_offering_id, assignment_id, updated_grade):
     statement = "CALL Update_Grade(" + str(assignment_id) + ", " + str(student_id) + ", " + str(course_offering_id) + ", " + str(updated_grade) + ")"
+    print("GRADE TO UPDATE: ", updated_grade)
     return execute_statement(get_database_connection(), statement)
 
 

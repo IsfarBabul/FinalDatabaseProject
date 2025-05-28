@@ -21,7 +21,15 @@ def get_student_schedule(student_id):       # desc: period, name of course, room
 
 def get_student_grades(student_id, period):    # desc: grade, assignment_name, assignment_type, course_type
     statement = "CALL Select_Grades(" + str(student_id) + ", " + str(period) + ")"
+    # print(execute_statement(get_database_connection(), statement))
     return execute_statement(get_database_connection(), statement)
+
+def calculate_course_average(student_id, period):
+    grade_infos = get_student_grades(student_id, period)
+    grades = []
+    for gradeInfo in grade_infos:
+        grades.append(gradeInfo[0])
+    return calculate_average(grades)
 
 
 def print_student_grades(results, id_num, chosen_period):   # TODO: FIGURE OUT IF THERE's SOMETHING WRONG HERE

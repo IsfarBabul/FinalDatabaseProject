@@ -1,5 +1,4 @@
 import mysql.connector
-from student import *
 
 
 def get_database_connection():
@@ -43,12 +42,7 @@ def calculate_average(array):
         sum_of_nums += element
     return sum_of_nums / len(array)
 
-def calculate_course_average(student_id, period):
-    grade_infos = get_student_grades(student_id, period)
-    grades = []
-    for gradeInfo in grade_infos:
-        grades.append(gradeInfo[0])
-    return calculate_average(grades)
+
 
 
 def dash_buffer(string):
