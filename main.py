@@ -1,3 +1,5 @@
+from operator import truediv
+
 from teacher import *
 from administrator import *
 
@@ -133,7 +135,7 @@ if user_identity == "student" or user_identity == "teacher":
 
                 select_assignment_id = grade_infos[select_assignment_option][4]      # PIECE 2/4
 
-                select_student_id = select_student(grade_infos[select_assignment_option])    # PIECE 3/4
+                select_student_id = select_student()    # PIECE 3/4
 
                 updated_grade = prompt_new_grade()      # PIECE 4/4
 
@@ -143,6 +145,60 @@ if user_identity == "student" or user_identity == "teacher":
                 chosen_period = select_period()
 
                 grade_infos = get_class_grades(id_num, chosen_period)
+
+                existing_assignment_ids = []
+
+                # create a pool of existing assignment_ids
+                for grade_info in grade_infos:
+                    found = False    # tracks if we find the same id in our pool of existing ids
+                    for existing_assignment_id in existing_assignment_ids:
+                        if existing_assignment_id == grade_info[4]:      # we don't add the same id so if found then we add nothing
+                            found = True
+                    if not found:
+                        existing_assignment_ids.append(grade_info[4])     # if not found then we know the appending id is different from all others
+
+                new_assignment_id = 0                # PIECE 1/4 once the below code runs
+                found = True
+                while found:
+                    new_assignment_id += 1
+                    identified = False    # tracks if we located same course_offering_id
+                    for grade_info in grade_infos:
+                        for existing_assignment_id in existing_assignment_ids:
+                            if existing_assignment_id == new_assignment_id:     # compare if a certain existing id matches with a new id we're attempting to use
+                                identified = True     # if located then found remains True
+                    if not identified:
+                        found = False    # if not located then found is false which breaks the loop
+
+                new_assignment_name = ""  # PIECE 2/4
+                while new_assignment_name == "":
+                    new_assignment_name = input("What will the name of this assignment be? ")
+
+                new_assignment_type_id = 0    # PIECE 3/4
+                while new_assignment_type_id != 1 and new_assignment_type_id != 2:
+                    new_grade = int(input("Input 1 for minor assignment or 2 for major assignment: "))
+
+
+                course_offering_id = grade_infos[0][6]  # PIECE 4/4      the use of 0 as the index is arbitrary but there has to be at least one grade info if we're here so it's the best candidate to use
+
+                add_assignment(new_assignment_id, new_assignment_name, new_assignment_type_id, course_offering_id)
+
+                # THE BELOW LOGIC IS TO GET THE STUDENT IDS OF AN ASSIGNMENT ASSUMING ALL ASSIGNMENTS GET THE SAME NUMBER OF GRADES FOR EACH STUDENT
+                # obtain names of each assignment
+                assignment_names = obtain_assignment_names(grade_infos)
+
+                # prints assignments in the course offering
+                print_assignments(grade_infos, assignment_names)
+
+                # separate gradeInfos into each class
+                assignment_grades = parse_grades_into_assignments(grade_infos, assignment_names)
+
+                student_ids = []
+                for grade_info in assignment_grades[0]: # again 0 is arbitrary but is the best number to use since there has to be at least 1 assignment
+                    student_ids.append(grade_info[5])
+
+                for student_id in student_ids:
+                    add_assignment_grade(student_id, new_assignment_id)
+
 
 
 

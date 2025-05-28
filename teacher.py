@@ -104,7 +104,7 @@ def print_grades(grade_infos, select_assignment_option, assignment_grades):
     for grade_info in assignment_grades[select_assignment_option]:
         print(grade_info[2], " (id: " + grade_info[5] + "): ", grade_info[0])
 
-def select_student(grade_infos_of_chosen_assignment):   # no clear way to deal with error handling
+def select_student():   # no clear way to deal with error handling
     selected_student_id = int(input("Input Student ID: "))
     return selected_student_id
 
@@ -119,5 +119,10 @@ def update_grade(student_id, course_offering_id, assignment_id, updated_grade):
     return execute_statement(get_database_connection(), statement)
 
 
-def add_assignment(specific_class):
-    print("TODO")
+def add_assignment(assignment_id, assignment_name, assignment_type_id, course_offering_id):
+    statement = "CALL Add_Assignment(" + str(assignment_id) + ", " + assignment_name + ", " + str(assignment_type_id) + ", " + str(course_offering_id) + ")"
+    return execute_statement(get_database_connection(), statement)
+
+def add_assignment_grade(student_id, assignment_id):
+    statement = "CALL Add_Assignment_Grade(" + str(student_id) + ", " + str(assignment_id) + ")"
+    return execute_statement(get_database_connection(), statement)
