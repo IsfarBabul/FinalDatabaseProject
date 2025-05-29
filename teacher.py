@@ -126,6 +126,12 @@ def add_assignment(assignment_id, assignment_name, assignment_type_id, course_of
     statement = "CALL Add_Assignment(" + str(assignment_id) + ", " + assignment_name + ", " + str(assignment_type_id) + ", " + str(course_offering_id) + ")"
     return execute_statement(get_database_connection(), statement)
 
+
 def add_assignment_grade(student_id, assignment_id):
     statement = "CALL Add_Assignment_Grade(" + str(student_id) + ", " + str(assignment_id) + ")"
+    return execute_statement(get_database_connection(), statement)
+
+
+def get_assignment_ids():
+    statement = "CALL Get_Assignment_Ids()"
     return execute_statement(get_database_connection(), statement)

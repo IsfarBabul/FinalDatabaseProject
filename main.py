@@ -173,6 +173,12 @@ if user_identity == "student" or user_identity == "teacher":
                     if not found:
                         existing_assignment_ids.append(grade_info[4])     # if not found then we know the appending id is different from all others
 
+                unparsed_assignment_ids = get_assignment_ids()
+                for unparsed_assignment_id in unparsed_assignment_ids:
+                    existing_assignment_ids.append(unparsed_assignment_id[0])
+
+                print(existing_assignment_ids.sort())
+
                 new_assignment_id = 0                # PIECE 1/4 once the below code runs
                 found = True
                 while found:
@@ -191,8 +197,7 @@ if user_identity == "student" or user_identity == "teacher":
 
                 new_assignment_type_id = 0    # PIECE 3/4
                 while new_assignment_type_id != 1 and new_assignment_type_id != 2:
-                    new_grade = int(input("Input 1 for minor assignment or 2 for major assignment: "))
-
+                    new_assignment_type_id = int(input("Input 1 for minor assignment or 2 for major assignment: "))
 
                 course_offering_id = grade_infos[0][6]  # PIECE 4/4      the use of 0 as the index is arbitrary but there has to be at least one grade info if we're here so it's the best candidate to use
 
