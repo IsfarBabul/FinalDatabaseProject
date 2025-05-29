@@ -18,6 +18,7 @@ def execute_statement(connection, statement):
         results.append(row)
 
     cursor.close()
+    connection.commit()
     connection.close()
 
     return results
