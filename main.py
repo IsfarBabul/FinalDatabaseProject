@@ -93,7 +93,7 @@ if user_identity == "student" or user_identity == "teacher":
             elif option == 2:
                 chosen_period = select_period()
 
-                grade_infos = get_class_grades(id_num, chosen_period)  # desc: grade, assignment_name, student_name, course_name
+                grade_infos = get_class_grades(id_num, chosen_period)  # desc: grade, assignment_name, student_name, course_name, assignment_id
 
                 # obtain names of each assignment
                 assignment_names = obtain_assignment_names(grade_infos)
@@ -132,7 +132,20 @@ if user_identity == "student" or user_identity == "teacher":
                 # the pieces for updating the grade are below
                 select_course_offering_id = grade_infos[select_assignment_option][6]  #PIECE 1/4
 
-                select_assignment_id = grade_infos[select_assignment_option][4]      # PIECE 2/4
+                assignment_ids = []
+                for grade_info in grade_infos:
+                    if len(assignment_ids) != 0:
+                        isThere = False
+                        for assignment_id in assignment_ids:
+                            if assignment_id == grade_info[4]:
+                                isThere = True
+                        if not isThere:
+                            assignment_ids.append(grade_info[4])
+                    else:
+                        assignment_ids.append(grade_info[4])
+
+                select_assignment_id = assignment_ids[select_assignment_option]  # PIECE 2/4
+                print(f"Assignment id: {select_assignment_id}")
 
                 select_student_id = select_student()    # PIECE 3/4
 
