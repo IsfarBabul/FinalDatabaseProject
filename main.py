@@ -6,7 +6,7 @@ from administrator import *
 
 
 user_identity = ""
-possible_identities = ["student", "teacher", "administrator"]
+possible_identities = ["student", "teacher", "administrator", "admin"]
 while not verify_user(user_identity, possible_identities):
     user_identity = input("What is your identity? (teacher, student, or administrator) ")
     user_identity = user_identity.lower()
@@ -164,32 +164,16 @@ if user_identity == "student" or user_identity == "teacher":
 
                 existing_assignment_ids = []
 
-                # create a pool of existing assignment_ids
-                for grade_info in grade_infos:
-                    found = False    # tracks if we find the same id in our pool of existing ids
-                    for existing_assignment_id in existing_assignment_ids:
-                        if existing_assignment_id == grade_info[4]:      # we don't add the same id so if found then we add nothing
-                            found = True
-                    if not found:
-                        existing_assignment_ids.append(grade_info[4])     # if not found then we know the appending id is different from all others
-
                 unparsed_assignment_ids = get_assignment_ids()
                 for unparsed_assignment_id in unparsed_assignment_ids:
                     existing_assignment_ids.append(unparsed_assignment_id[0])
 
-                print(existing_assignment_ids.sort())
+                # print(existing_assignment_ids)
+                # print(max(existing_assignment_ids))
 
-                new_assignment_id = 0                # PIECE 1/4 once the below code runs
-                found = True
-                while found:
-                    new_assignment_id += 1
-                    identified = False    # tracks if we located same course_offering_id
-                    for grade_info in grade_infos:
-                        for existing_assignment_id in existing_assignment_ids:
-                            if existing_assignment_id == new_assignment_id:     # compare if a certain existing id matches with a new id we're attempting to use
-                                identified = True     # if located then found remains True
-                    if not identified:
-                        found = False    # if not located then found is false which breaks the loop
+                new_assignment_id = max(existing_assignment_ids) + 1
+
+                print(new_assignment_id)
 
                 new_assignment_name = ""  # PIECE 2/4
                 while new_assignment_name == "":
@@ -208,7 +192,7 @@ if user_identity == "student" or user_identity == "teacher":
                 assignment_names = obtain_assignment_names(grade_infos)
 
                 # prints assignments in the course offering
-                print_assignments(grade_infos, assignment_names)
+                # print_assignments(grade_infos, assignment_names)
 
                 # separate gradeInfos into each class
                 assignment_grades = parse_grades_into_assignments(grade_infos, assignment_names)
@@ -246,6 +230,9 @@ else:
             while option < 1 or option > 4:
                 option = int(input("Choose an Option: "))
             print()
+
+            if option == 1:
+                print()
 
             if option != 4:
                 option = 0

@@ -123,7 +123,7 @@ def update_grade(assignment_id, student_id, course_offering_id, updated_grade):
 
 
 def add_assignment(assignment_id, assignment_name, assignment_type_id, course_offering_id):
-    statement = "CALL Add_Assignment(" + str(assignment_id) + ", " + assignment_name + ", " + str(assignment_type_id) + ", " + str(course_offering_id) + ")"
+    statement = "CALL Add_Assignment(" + str(assignment_id) + ", '" + assignment_name + "', " + str(assignment_type_id) + ", " + str(course_offering_id) + ")"
     return execute_statement(get_database_connection(), statement)
 
 
