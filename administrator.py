@@ -23,6 +23,7 @@ def get_student_schedule(student_id):
     statement = "CALL Get_Student_Schedule( " + str(student_id) + " )"
     return execute_statement(get_database_connection(), statement)
 
-def get_assignment_ids(course_id):
-    statement = "CALL Get_Assignment_Ids( " + str(course_id) + " )"
+
+def get_course_offering_assignment_ids(course_offering_id):
+    statement = "CALL Get_Assignment_Ids( " + str(course_offering_id) + " )"
     return execute_statement(get_database_connection(), statement)

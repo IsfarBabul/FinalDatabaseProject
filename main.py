@@ -249,14 +249,14 @@ else:
 
                 course_offering_option = 0
                 while course_offering_option < 1 or course_offering_option > len(course_offering_ids):
-                    course_offering_option = input("Input the number of your target course offering")
+                    course_offering_option = input("Input the number of your target course offering: ")
                 course_offering_option -= 1
 
                 specified_course_offering_id = course_offering_ids[course_offering_option]
 
                 add_student(selected_student_id, specified_course_offering_id)
 
-                for assignment_id in get_assignment_ids(specified_course_offering_id):
+                for assignment_id in get_course_offering_assignment_ids(specified_course_offering_id):
                     add_assignment_grade(selected_student_id, assignment_id)
 
             if option == 2:
