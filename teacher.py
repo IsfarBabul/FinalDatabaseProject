@@ -132,6 +132,11 @@ def add_assignment_grade(student_id, assignment_id):
     return execute_statement(get_database_connection(), statement)
 
 
+def remove_assignment_grade(student_id, assignment_id):
+    statement = "CALL Remove_Assignment_Grade(" + str(student_id) + ", " + str(assignment_id) + ")"
+    return execute_statement(get_database_connection(), statement)
+
+
 def get_assignment_ids():
     statement = "CALL Get_Assignment_Ids()"
     return execute_statement(get_database_connection(), statement)

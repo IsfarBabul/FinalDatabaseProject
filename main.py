@@ -222,8 +222,8 @@ else:
         while option != 4:
 
             print("Main Menu")
-            print("1: Add a student")
-            print("2: Remove a student")
+            print("1: Add a student to a class")
+            print("2: Remove a student from a class")
             print("3: Create a new class")
             print("4: Quit the program")
             print("")
@@ -232,7 +232,36 @@ else:
             print()
 
             if option == 1:
+
+                selected_student_id = input("Input a Student ID: ")
+
+                course_offering_ids = []
+                course_names = []
+                listed_course_offering_ids = get_course_offering_ids()
+                for listed_course_offering_id in listed_course_offering_ids:
+                     course_offering_ids.append(listed_course_offering_id[1])
+                     course_names.append(listed_course_offering_id[0])
+
                 print()
+                for i in range(len(course_offering_ids)):
+                    print(f"{i + 1}: {course_names[i]} (id: {course_offering_ids[i]})")
+                print()
+
+                course_offering_option = 0
+                while course_offering_option < 1 or course_offering_option > len(course_offering_ids):
+                    course_offering_option = input("Input the number of your target course offering")
+                course_offering_option -= 1
+
+                specified_course_offering_id = course_offering_ids[course_offering_option]
+
+                add_student(selected_student_id, specified_course_offering_id)
+
+                for assignment_id in get_assignment_ids(specified_course_offering_id):
+                    add_assignment_grade(selected_student_id, assignment_id)
+
+            if option == 2:
+                print("TBD")
+
 
             if option != 4:
                 option = 0
