@@ -184,6 +184,7 @@ if user_identity == "student" or user_identity == "teacher":
                     new_assignment_type_id = int(input("Input 1 for minor assignment or 2 for major assignment: "))
 
                 course_offering_id = grade_infos[0][6]  # PIECE 4/4      the use of 0 as the index is arbitrary but there has to be at least one grade info if we're here so it's the best candidate to use
+                # TODO: DOES NOT WORK WHEN THERE ARE NO ASSIGNMENTS BECAUSE IT PULLS FROM GRADE INFOS
 
                 add_assignment(new_assignment_id, new_assignment_name, new_assignment_type_id, course_offering_id)
 
@@ -247,10 +248,17 @@ else:
                     print(f"{i + 1}: {course_names[i]} (id: {course_offering_ids[i]})")
                 print()
 
+                # SHOULD PRINT OUT CLASSES STUDENT IS IN
+                # TODO: EXCLUDE THESE CLASS PERIODS SINCE THE STUDENT HAS A CLASS THERE ALREADY
+
+                # TODO: FILTER BASED ON PERIOD, COURSE TYPE, COURSE, AND THEN SELECT THE CLASS TO ADD THE STUDENT IN
+
                 course_offering_option = 0
                 while course_offering_option < 1 or course_offering_option > len(course_offering_ids):
-                    course_offering_option = input("Input the number of your target course offering: ")
+                    course_offering_option = int(input("Input the number of your target course offering: "))
                 course_offering_option -= 1
+
+                # TODO: FIX IT WHEN YOU GET BACK IT BREAKS HERE
 
                 specified_course_offering_id = course_offering_ids[course_offering_option]
 
@@ -289,7 +297,15 @@ else:
                     remove_assignment_grade(selected_student_id, assignment_id[0])
 
             elif option == 3:
-                print()
+                determined_course_offering_id = 0
+                specified_course_id = 0
+                determined_course_offering_room = ""
+                determined_teacher_id = 0
+                specified_period = 0
+
+
+
+
 
 
             if option != 4:
