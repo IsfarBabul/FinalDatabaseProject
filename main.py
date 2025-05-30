@@ -262,7 +262,19 @@ else:
             elif option == 2:
                 selected_student_id = input("Input a Student ID: ")
 
-                student_schedule = get_student_schedule_ids(selected_student_id)
+                student_course_offerings = get_student_course_offerings(selected_student_id) # desc: course_offering_id, course_name, period
+
+                print("Period| Course Name")
+                print()
+                for student_course_offering in student_course_offerings:
+                    print(f"{student_course_offering[2]}| {student_course_offering[1]}")
+                print()
+
+
+
+
+
+
 
 
 

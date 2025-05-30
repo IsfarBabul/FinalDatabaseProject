@@ -19,8 +19,8 @@ def get_course_offering_ids():
     statement = "CALL Get_Course_Offering_Ids()"
     return execute_statement(get_database_connection(), statement)
 
-def get_student_schedule_ids(student_id):
-    statement = "CALL Get_Student_Schedule( " + str(student_id) + " )"
+def get_student_course_offerings(student_id):
+    statement = "CALL Get_Student_Course_Offerings( " + str(student_id) + " )"
     return execute_statement(get_database_connection(), statement)
 
 
