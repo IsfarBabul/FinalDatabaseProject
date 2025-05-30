@@ -259,8 +259,15 @@ else:
                 for assignment_id in get_course_offering_assignment_ids(specified_course_offering_id):
                     add_assignment_grade(selected_student_id, assignment_id)
 
-            if option == 2:
-                print("TBD")
+            elif option == 2:
+                selected_student_id = input("Input a Student ID: ")
+
+                student_schedule = get_student_schedule_ids(selected_student_id)
+
+
+
+            elif option == 3:
+                print()
 
 
             if option != 4:
