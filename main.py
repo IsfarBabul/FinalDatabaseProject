@@ -270,13 +270,23 @@ else:
                     print(f"{student_course_offering[2]}| {student_course_offering[1]}")
                 print()
 
+                specified_period = 0
 
+                while specified_period < 1 or specified_period > 10:
+                    specified_period = int(input("Input the period of the class you want to remove the student from: "))
 
+                target_course_offering_id = 0
+                for student_course_offering in student_course_offerings:
+                    if student_course_offering[2] == specified_period:
+                        target_course_offering_id = student_course_offering[0]
 
+                remove_student(selected_student_id, target_course_offering_id)
 
+                assignment_ids = get_course_offering_assignment_ids(target_course_offering_id)
 
-
-
+                for assignment_id in assignment_ids:
+                    print(assignment_id)
+                    remove_assignment_grade(selected_student_id, assignment_id[0])
 
             elif option == 3:
                 print()

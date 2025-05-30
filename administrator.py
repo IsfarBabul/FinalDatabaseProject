@@ -25,5 +25,5 @@ def get_student_course_offerings(student_id):
 
 
 def get_course_offering_assignment_ids(course_offering_id):
-    statement = "CALL Get_Assignment_Ids( " + str(course_offering_id) + " )"
+    statement = "CALL Get_Course_Offering_Assignment_Ids( " + str(course_offering_id) + " )"
     return execute_statement(get_database_connection(), statement)
