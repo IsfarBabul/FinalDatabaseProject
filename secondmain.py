@@ -19,4 +19,6 @@ random_integer = random.randint(1, 100)
 
 print(random_integer)
 
+get_course_offering_general_info(3)
+
 

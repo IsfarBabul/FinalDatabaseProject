@@ -29,7 +29,9 @@ def get_course_offering_assignment_ids(course_offering_id):
     return execute_statement(get_database_connection(), statement)
 
 def get_course_offering_general_info(specified_period):
-    statement = "CALL Get_Course_Offering_General_Info( " + str(specified_period) + " )"
+    statement = "CALL Get_Course_Offering_General_Info(" + str(specified_period) + ")"
+    print(statement)
+    print("CALL Get_Course_Offering_General_Info(3);")
     return execute_statement(get_database_connection(), statement)
 
 def get_courses_info():

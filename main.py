@@ -249,7 +249,7 @@ else:
                     print(f"{i + 1}: {course_names[i]} (id: {course_offering_ids[i]})")
                 print()
 
-                # SHOULD PRINT OUT CLASSES STUDENT IS IN
+                # SHOULD PRINT OUT CLASSES AND THEIR COURSE_OFFERING_ID THAT THE STUDENT IS IN
                 # TODO: EXCLUDE THESE CLASS PERIODS SINCE THE STUDENT HAS A CLASS THERE ALREADY
 
                 # TODO: FILTER BASED ON PERIOD, COURSE TYPE, COURSE, AND THEN SELECT THE CLASS TO ADD THE STUDENT IN
