@@ -326,18 +326,27 @@ else:
 
                 print("before the nested for loop")
 
+                all_rooms = ""
+
                 for room in all_possible_rooms:
                     # print("together forever")
                     room_found = False
                     for course_offering_info in course_offering_infos:
-                        if room == course_offering_infos[1]:
+                        print("ROOM: " + room)
+                        print(course_offering_info[1])
+                        if room == course_offering_info[1]:
                             room_found = True
                     if not room_found:
                         all_available_rooms.append(room)
 
+                print("ALL ROOMS" + all_rooms)
+                print(all_available_rooms)
+
                 print("reach past nested for loop")
 
-                determined_course_offering_room = all_possible_rooms[0]    # PIECE 2/5
+                random_room_id_index = random.randint(0, len(all_available_rooms) - 1)
+
+                determined_course_offering_room = all_available_rooms[random_room_id_index]    # PIECE 2/5
                 print(determined_course_offering_room)
 
                 # find a random available teacher
