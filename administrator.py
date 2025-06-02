@@ -36,6 +36,10 @@ def get_courses_info():
     statement = "CALL Get_Courses_Info()"
     return execute_statement(get_database_connection(), statement)
 
+def get_teacher_ids():
+    statement = "CALL Get_All_Teacher_Ids()"
+    return execute_statement(get_database_connection(), statement)
+
 def get_all_room_numbers():
     room_wings = ["N", "E", "S", "W"]
     floor_numbers = ["B", "1", "2", "3", "4", "5", "6", "7", "8"]

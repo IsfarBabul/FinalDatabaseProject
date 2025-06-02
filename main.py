@@ -1,3 +1,4 @@
+import random
 
 from teacher import *
 from administrator import *
@@ -302,6 +303,90 @@ else:
                 determined_course_offering_room = ""
                 determined_teacher_id = 0
                 specified_period = 0
+
+                # find the specfied period
+                while specified_period < 1 or specified_period > 10:
+                    specified_period = int(input("Input the period you want this class to be in: "))    # PIECE 1/5
+
+                course_offering_infos = get_course_offering_general_info(specified_period) # desc: course_offering_id, course_offering_room, teacher_id
+
+                # find an available room
+
+                all_possible_rooms = get_all_room_numbers()
+
+                all_available_rooms = []
+
+                for room in all_possible_rooms:
+                    room_found = False
+                    for course_offering_info in course_offering_infos:
+                        if room == course_offering_infos[1]:
+                            room_found = True
+                    if not room_found:
+                        all_possible_rooms.append(room)
+
+                determined_course_offering_room = all_possible_rooms[0]    # PIECE 2/5
+
+                # find a random available teacher
+
+                arrayed_teacher_ids = get_teacher_ids()   # actually comes in array with 1 element arrays
+
+                all_teacher_ids = []
+
+                for arrayed_teacher_id in arrayed_teacher_ids:
+                    all_teacher_ids.append(arrayed_teacher_id[0])   # picks the only element in each array called arrayed_teacher_id
+
+                all_available_teachers = []
+
+                for teacher_id in all_teacher_ids:
+                    teacher_found = False
+                    for course_offering_info in course_offering_infos:
+                        if teacher_id == course_offering_infos[2]:
+                            teacher_found = True
+                    if not teacher_found:
+                        all_available_teachers.append(teacher_id)
+
+                random_teacher_id_index = random.randint(0, len(all_available_teachers) - 1)   # picks out a random index for all_available_teachers
+
+                determined_teacher_id = all_available_teachers[random_teacher_id_index]    # PIECE 3/5
+
+                # determine a new course_offering_id for the class
+
+                all_existing_course_offering_ids = []
+
+                for course_offering_ids in course_offering_infos:
+                    all_existing_course_offering_ids.append(course_offering_ids[0])
+
+                determined_course_offering_id = max(all_existing_course_offering_ids) + 1   # PIECE 4/5
+
+                # ask the user for the name of the course they are adding a class for
+
+                courses_info = get_courses_info()   # desc: course_id, course_name, course_type_id
+
+
+                print()
+                for i in range(len(courses_info)):
+                    print(f"{i + 1}: {courses_info[i][1]}")
+                print()
+
+                specified_course_option = 0
+
+                while specified_course_option < 1 or specified_course_option > 10:
+                    specified_period = int(input("Input the the number next to the name of the course you want to add: "))
+
+                specified_course_id = courses_info[specified_course_option - 1][0]   # PIECE 5/5
+
+
+                # we will use all five pieces of information we obtained to add the class
+
+                #             PIECE 4/5                     PIECE 5/5               PIECE 2/5                      PIECE 3/5              PIECE 1/5
+                add_class(determined_course_offering_id, specified_course_id, determined_course_offering_room, determined_teacher_id, specified_period)
+
+                print(f"Your class called {courses_info[specified_course_option - 1][1]} has been added!")
+
+
+
+
+
 
 
 
