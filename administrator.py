@@ -15,32 +15,38 @@ def add_class(course_offering_id, course_id, course_offering_room, teacher_id, p
     print(statement)
     return execute_statement(get_database_connection(), statement)
 
-def get_course_offering_ids():
-    statement = "CALL Get_Course_Offering_Ids()"
-    return execute_statement(get_database_connection(), statement)
+def get_course_offering_ids(specified_period):
+    statement = "CALL Get_Course_Offering_Ids(" + str(specified_period) + ")"
+    return execute_read_statement(get_database_connection(), statement)
 
 def get_student_course_offerings(student_id):
     statement = "CALL Get_Student_Course_Offerings( " + str(student_id) + " )"
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)
 
 
 def get_course_offering_assignment_ids(course_offering_id):
     statement = "CALL Get_Course_Offering_Assignment_Ids( " + str(course_offering_id) + " )"
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)
 
 def get_course_offering_general_info(specified_period):
     statement = "CALL Get_Course_Offering_General_Info(" + str(specified_period) + ")"
-    print(statement)
-    print("CALL Get_Course_Offering_General_Info(3);")
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)
+
+def get_all_course_offering_general_info():
+    all_course_offering_infos = []
+    for i in range(10):
+        course_offering_infos = get_course_offering_general_info(i + 1)
+        for course_offering_info in course_offering_infos:
+            all_course_offering_infos.append(course_offering_info)
+    return all_course_offering_infos
 
 def get_courses_info():
     statement = "CALL Get_Courses_Info()"
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)
 
 def get_teacher_ids():
     statement = "CALL Get_All_Teacher_Ids()"
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)
 
 def get_all_room_numbers():
     room_wings = ["N", "E", "S", "W"]

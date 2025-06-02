@@ -3,7 +3,7 @@ from utility import *
 
 def get_student_name(student_id):
     statement = "CALL Get_Student_Name(" + str(student_id) + ")"
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)
 
 
 def get_student_class_periods(student_id):
@@ -16,13 +16,13 @@ def get_student_class_periods(student_id):
 
 def get_student_schedule(student_id):       # desc: period, name of course, room, teacher
     statement = "CALL Select_Student('" + student_id + "')"
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)
 
 
 def get_student_grades(student_id, period):    # desc: grade, assignment_name, assignment_type, course_type
     statement = "CALL Select_Grades(" + str(student_id) + ", " + str(period) + ")"
     # print(execute_statement(get_database_connection(), statement))
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)
 
 def calculate_course_average(student_id, period):
     grade_infos = get_student_grades(student_id, period)

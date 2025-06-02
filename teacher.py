@@ -4,7 +4,7 @@ from utility import *
 
 def get_teacher_name(teacher_id):
     statement = "CALL Get_Teacher_Name(" + str(teacher_id) + ")"
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)
 
 
 
@@ -43,12 +43,12 @@ def get_student_overall_grade(student_id):
 
 def get_teacher_schedule(teacher_id):
     statement = "CALL Select_Teacher('" + teacher_id + "')"
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)
 
 
 def get_class_grades(teacher_id, period):    # ask later: assignment_name_option
     statement = "CALL Select_Assignments(" + str(teacher_id) + ", " + str(period) + ")"
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)
 
 
 def obtain_assignment_names(grade_infos):
@@ -129,6 +129,7 @@ def add_assignment(assignment_id, assignment_name, assignment_type_id, course_of
 
 def add_assignment_grade(student_id, assignment_id):
     statement = "CALL Add_Assignment_Grade(" + str(student_id) + ", " + str(assignment_id) + ")"
+    print(statement)
     return execute_statement(get_database_connection(), statement)
 
 
@@ -139,4 +140,4 @@ def remove_assignment_grade(student_id, assignment_id):
 
 def get_assignment_ids():
     statement = "CALL Get_Assignment_Ids()"
-    return execute_statement(get_database_connection(), statement)
+    return execute_read_statement(get_database_connection(), statement)

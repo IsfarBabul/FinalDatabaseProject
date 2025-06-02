@@ -24,6 +24,20 @@ def execute_statement(connection, statement):
     return results
 
 
+def execute_read_statement(connection, statement):
+    cursor = connection.cursor()
+    cursor.execute(statement)
+    results = []
+
+    for row in cursor:
+        results.append(row)
+
+    cursor.close()
+    connection.close()
+
+    return results
+
+
 # check if the user inputted a correct identity
 def verify_user(claimed_identity, possible_identities):
     for possible_identity in possible_identities:
