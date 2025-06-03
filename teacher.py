@@ -129,7 +129,7 @@ def add_assignment(assignment_id, assignment_name, assignment_type_id, course_of
 
 def add_assignment_grade(student_id, assignment_id):
     statement = "CALL Add_Assignment_Grade(" + str(student_id) + ", " + str(assignment_id) + ")"
-    print(statement)
+    # print(statement)
     return execute_statement(get_database_connection(), statement)
 
 
@@ -141,3 +141,56 @@ def remove_assignment_grade(student_id, assignment_id):
 def get_assignment_ids():
     statement = "CALL Get_Assignment_Ids()"
     return execute_read_statement(get_database_connection(), statement)
+
+def get_teacher_course_offering_id(teacher_id, period):
+    statement = "CALL Get_Course_Offering_Id(" + str(teacher_id) + ", " + str(period) + ")"
+    return execute_read_statement(get_database_connection(), statement)
+
+def get_student_ids_by_class(course_offering_id):
+    statement = "CALL Get_Student_Ids_By_Class(" + str(course_offering_id) + ")"
+    return execute_read_statement(get_database_connection(), statement)
+
+def update_grade_logic(grade_infos):
+    # obtain names of each assignment
+    assignment_names = obtain_assignment_names(grade_infos)
+
+    # prints assignments in the course offering
+    print_assignments(grade_infos, assignment_names)
+
+    # separate gradeInfos into each class
+    assignment_grades = parse_grades_into_assignments(grade_infos, assignment_names)
+
+    # specify an assignment the user wants
+    select_assignment_option = select_assignment(grade_infos)
+
+    # prints grades of each student that has this assignment
+    print_grades(grade_infos, select_assignment_option, assignment_grades)
+
+    # the pieces for updating the grade are below
+    select_course_offering_id = grade_infos[select_assignment_option][6]  # PIECE 1/4
+
+    assignment_ids = []
+    for grade_info in grade_infos:
+        if len(assignment_ids) != 0:
+            isThere = False
+            for assignment_id in assignment_ids:
+                if assignment_id == grade_info[4]:
+                    isThere = True
+            if not isThere:
+                assignment_ids.append(grade_info[4])
+        else:
+            assignment_ids.append(grade_info[4])
+
+    select_assignment_id = assignment_ids[select_assignment_option]  # PIECE 2/4
+    # print(f"Assignment id: {select_assignment_id}")
+
+    select_student_id = select_student()  # PIECE 3/4
+
+    updated_grade = prompt_new_grade()  # PIECE 4/4
+
+    # print("reached")
+
+    # print(f"{select_assignment_id} {select_student_id} {select_course_offering_id} {updated_grade}")
+
+    # updates the grade accordingly
+    update_grade(select_assignment_id, select_student_id, select_course_offering_id, updated_grade)

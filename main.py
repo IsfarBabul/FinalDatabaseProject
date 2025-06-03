@@ -84,7 +84,7 @@ if user_identity == "student" or user_identity == "teacher":
                 option = int(input("Choose an Option: "))
             print()
 
-            if option == 1:
+            if option == 1:      # TODO: ORDER OF SCHEDULES IS INCORRECT WHEN ADDING STUDENT TO A CLASS
                 results = get_teacher_schedule(id_num)
                 for result in results:
                     print("Period: ", result[1])
@@ -96,68 +96,38 @@ if user_identity == "student" or user_identity == "teacher":
 
                 grade_infos = get_class_grades(id_num, chosen_period)  # desc: grade, assignment_name, student_name, course_name, assignment_id
 
-                # obtain names of each assignment
-                assignment_names = obtain_assignment_names(grade_infos)
+                if len(grade_infos) != 0:
+                    # obtain names of each assignment
+                    assignment_names = obtain_assignment_names(grade_infos)
 
-                # prints assignments in the course offering
-                print_assignments(grade_infos, assignment_names)
+                    # prints assignments in the course offering
+                    print_assignments(grade_infos, assignment_names)
 
-                # separate gradeInfos into each class
-                assignment_grades = parse_grades_into_assignments(grade_infos, assignment_names)
+                    # separate gradeInfos into each class
+                    assignment_grades = parse_grades_into_assignments(grade_infos, assignment_names)
 
-                # specify an assignment the user wants
-                select_assignment_option = select_assignment(grade_infos)
+                    # specify an assignment the user wants
+                    select_assignment_option = select_assignment(grade_infos)
 
-                # prints grades of each student that has this assignment
-                print_grades(grade_infos, select_assignment_option, assignment_grades)
+                    # prints grades of each student that has this assignment
+                    print_grades(grade_infos, select_assignment_option, assignment_grades)
+                else:
+                    print()
+                    print("No grades to view!")
+                    print()
+
             elif option == 3:
                 chosen_period = select_period()
 
                 grade_infos = get_class_grades(id_num, chosen_period)
 
-                # obtain names of each assignment
-                assignment_names = obtain_assignment_names(grade_infos)
+                if len(grade_infos) != 0:
+                    update_grade_logic(grade_infos)
+                else:
+                    print()
+                    print("No grades to update!")
+                    print()
 
-                # prints assignments in the course offering
-                print_assignments(grade_infos, assignment_names)
-
-                # separate gradeInfos into each class
-                assignment_grades = parse_grades_into_assignments(grade_infos, assignment_names)
-
-                # specify an assignment the user wants
-                select_assignment_option = select_assignment(grade_infos)
-
-                # prints grades of each student that has this assignment
-                print_grades(grade_infos, select_assignment_option, assignment_grades)
-
-                # the pieces for updating the grade are below
-                select_course_offering_id = grade_infos[select_assignment_option][6]  #PIECE 1/4
-
-                assignment_ids = []
-                for grade_info in grade_infos:
-                    if len(assignment_ids) != 0:
-                        isThere = False
-                        for assignment_id in assignment_ids:
-                            if assignment_id == grade_info[4]:
-                                isThere = True
-                        if not isThere:
-                            assignment_ids.append(grade_info[4])
-                    else:
-                        assignment_ids.append(grade_info[4])
-
-                select_assignment_id = assignment_ids[select_assignment_option]  # PIECE 2/4
-                print(f"Assignment id: {select_assignment_id}")
-
-                select_student_id = select_student()    # PIECE 3/4
-
-                updated_grade = prompt_new_grade()      # PIECE 4/4
-
-                print("reached")
-
-                print(f"{select_assignment_id} {select_student_id} {select_course_offering_id} {updated_grade}")
-
-                # updates the grade accordingly
-                update_grade(select_assignment_id, select_student_id, select_course_offering_id, updated_grade)
             elif option == 4:
                 chosen_period = select_period()
 
@@ -184,8 +154,7 @@ if user_identity == "student" or user_identity == "teacher":
                 while new_assignment_type_id != 1 and new_assignment_type_id != 2:
                     new_assignment_type_id = int(input("Input 1 for minor assignment or 2 for major assignment: "))
 
-                course_offering_id = grade_infos[0][6]  # PIECE 4/4      the use of 0 as the index is arbitrary but there has to be at least one grade info if we're here so it's the best candidate to use
-                # TODO: DOES NOT WORK WHEN THERE ARE NO ASSIGNMENTS BECAUSE IT PULLS FROM GRADE INFOS
+                course_offering_id = get_teacher_course_offering_id(id_num, chosen_period)[0][0]  # PIECE 4/4      the use of 0 as the index is arbitrary but there has to be at least one grade info if we're here so it's the best candidate to use
 
                 add_assignment(new_assignment_id, new_assignment_name, new_assignment_type_id, course_offering_id)
 
@@ -200,11 +169,17 @@ if user_identity == "student" or user_identity == "teacher":
                 assignment_grades = parse_grades_into_assignments(grade_infos, assignment_names)
 
                 student_ids = []
-                for grade_info in assignment_grades[0]: # again 0 is arbitrary but is the best number to use since there has to be at least 1 assignment
-                    student_ids.append(grade_info[5])
+                unparsed_student_ids = get_student_ids_by_class(course_offering_id)
+                for student_id in unparsed_student_ids:
+                    student_ids.append(student_id[0])
 
                 for student_id in student_ids:
                     add_assignment_grade(student_id, new_assignment_id)
+
+                if len(student_ids) == 0:
+                    print()
+                    print("Note: No assignments were actually added because there are no students in this class.")
+                    print()
 
 
 
