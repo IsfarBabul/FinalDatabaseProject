@@ -287,19 +287,14 @@ else:
                 # find the specfied period
                 while specified_period < 1 or specified_period > 10:
                     specified_period = int(input("Input the period you want this class to be in: "))    # PIECE 1/5
-                print(specified_period)
 
                 course_offering_infos = get_course_offering_general_info(specified_period) # desc: course_offering_id, course_offering_room, teacher_id
 
                 # find an available room
 
                 all_possible_rooms = get_all_room_numbers()
-                print(all_possible_rooms)
-                print(len(all_possible_rooms))
 
                 all_available_rooms = []
-
-                print("before the nested for loop")
 
                 all_rooms = ""
 
@@ -307,22 +302,15 @@ else:
                     # print("together forever")
                     room_found = False
                     for course_offering_info in course_offering_infos:
-                        print("ROOM: " + room)
-                        print(course_offering_info[1])
                         if room == course_offering_info[1]:
                             room_found = True
                     if not room_found:
                         all_available_rooms.append(room)
 
-                print("ALL ROOMS" + all_rooms)
-                print(all_available_rooms)
-
-                print("reach past nested for loop")
-
                 random_room_id_index = random.randint(0, len(all_available_rooms) - 1)
 
                 determined_course_offering_room = all_available_rooms[random_room_id_index]    # PIECE 2/5
-                print(determined_course_offering_room)
+                # print(determined_course_offering_room)
 
                 # find a random available teacher
 
@@ -346,7 +334,7 @@ else:
                 random_teacher_id_index = random.randint(0, len(all_available_teachers) - 1)   # picks out a random index for all_available_teachers
 
                 determined_teacher_id = all_available_teachers[random_teacher_id_index]    # PIECE 3/5
-                print(determined_teacher_id)
+                # print(determined_teacher_id)
 
                 # determine a new course_offering_id for the class
 
@@ -357,11 +345,11 @@ else:
                 for course_offering_ids in all_course_offering_infos:
                     all_existing_course_offering_ids.append(course_offering_ids[0])
 
-                print(max(all_existing_course_offering_ids))
-                print(all_existing_course_offering_ids)
+                # print(max(all_existing_course_offering_ids))
+                # print(all_existing_course_offering_ids)
 
                 determined_course_offering_id = max(all_existing_course_offering_ids) + 1   # PIECE 4/5
-                print(determined_course_offering_id)
+                # print(determined_course_offering_id)
 
                 # ask the user for the name of the course they are adding a class for
 
@@ -379,7 +367,7 @@ else:
                     specified_course_option = int(input("Input the the number next to the name of the course you want to add: "))
 
                 specified_course_id = courses_info[specified_course_option - 1][0]   # PIECE 5/5
-                print(specified_course_id)
+                # print(specified_course_id)
 
 
                 # we will use all five pieces of information we obtained to add the class
