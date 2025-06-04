@@ -42,6 +42,12 @@ def add_student_to_system(student_name):
         student_ids.append(unparsed_student_id[0])
     student_id = max(student_ids) + 1
 
+    print()
+    print("Student added!")
+    print(f"Student Name: {student_name}")
+    print(f"Student ID: {student_id}")
+    print()
+
     statement = "CALL Add_Student_To_System(" + str(student_id) + ", '" + student_name + "')"
     return execute_statement(get_database_connection(), statement)
 

@@ -117,8 +117,6 @@ def prompt_new_grade():
 
 def update_grade(assignment_id, student_id, course_offering_id, updated_grade):
     statement = "CALL Update_Grade(" + str(assignment_id) + ", " + str(student_id) + ", " + str(course_offering_id) + ", " + str(updated_grade) + ")"
-    print(statement)
-    print(f"{assignment_id} {student_id} {course_offering_id} {updated_grade}")
     return execute_statement(get_database_connection(), statement)
 
 

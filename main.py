@@ -156,7 +156,7 @@ while user_identity != "quit":
                     while new_assignment_type_id != 1 and new_assignment_type_id != 2:
                         new_assignment_type_id = int(input("Input 1 for minor assignment or 2 for major assignment: "))
 
-                    course_offering_id = get_teacher_course_offering_id(id_num, chosen_period)[0][0]  # PIECE 4/4      the use of 0 as the index is arbitrary but there has to be at least one grade info if we're here so it's the best candidate to use
+                    course_offering_id = get_teacher_course_offering_id(id_num, chosen_period)[0][0]  # PIECE 4/4
 
                     add_assignment(new_assignment_id, new_assignment_name, new_assignment_type_id, course_offering_id)
 
@@ -227,10 +227,12 @@ while user_identity != "quit":
                     if len(class_periods) < 10:
 
                         print()
-                        print("Period| Course Name")
-                        print()
-                        for result in results:
-                            print(f"{result[0]}| {result[1]}")
+                        if len(class_periods) != 0:
+                            print("Period| Course Name")
+                            for result in results:
+                                print(f"{result[0]}| {result[1]}")
+                        else:
+                            print("This student has no classes yet.")
                         print()
 
                         specified_period = 0
