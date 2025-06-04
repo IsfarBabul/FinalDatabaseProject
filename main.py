@@ -27,7 +27,7 @@ while user_identity != "quit":
             option = 0
 
             while option != 4:
-
+                print()
                 print("Main Menu")
                 print("1: View your schedule")
                 print("2: View your overall grade")
@@ -200,15 +200,17 @@ while user_identity != "quit":
 
             option = 0
 
-            while option != 4:
+            while option != 5:
 
+                print()
                 print("Main Menu")
                 print("1: Add a student to a class")
                 print("2: Remove a student from a class")
                 print("3: Create a new class")
-                print("4: Logout")
+                print("4: Add a student to the system")
+                print("5: Logout")
                 print("")
-                while option < 1 or option > 4:
+                while option < 1 or option > 5:
                     option = int(input("Choose an Option: "))
                 print()
 
@@ -216,47 +218,69 @@ while user_identity != "quit":
 
                     selected_student_id = input("Input a Student ID: ")
 
-                    specified_period = 0
+                    results = get_student_schedule(selected_student_id)
 
-                    while specified_period < 1 or specified_period > 10:
-                        specified_period = int(input("Input the period you want to add the student to: "))
+                    class_periods = []
+                    for result in results:
+                        class_periods.append(result[0])
 
-                    course_offering_ids = []
-                    course_names = []
-                    listed_course_offering_ids = get_course_offering_ids(specified_period)
-                    for listed_course_offering_id in listed_course_offering_ids:
-                         course_offering_ids.append(listed_course_offering_id[1])
-                         course_names.append(listed_course_offering_id[0])
+                    if len(class_periods) < 10:
 
-                    print()
-                    for i in range(len(course_offering_ids)):
-                        print(f"{i + 1}: {course_names[i]} (id: {course_offering_ids[i]})")
-                    print()
+                        print()
+                        print("Period| Course Name")
+                        print()
+                        for result in results:
+                            print(f"{result[0]}| {result[1]}")
+                        print()
 
-                    # SHOULD PRINT OUT CLASSES AND THEIR COURSE_OFFERING_ID THAT THE STUDENT IS IN
-                    # TODO: EXCLUDE THESE CLASS PERIODS SINCE THE STUDENT HAS A CLASS THERE ALREADY
+                        specified_period = 0
 
-                    # TODO: FILTER BASED ON PERIOD, COURSE TYPE, COURSE, AND THEN SELECT THE CLASS TO ADD THE STUDENT IN
+                        while specified_period < 1 or specified_period > 10:
+                            specified_period = int(input("Input a free period you want to add the student to: "))
+                            for result in results:
+                                if result[0] == specified_period:
+                                    specified_period = 0
 
-                    course_offering_option = 0
-                    while course_offering_option < 1 or course_offering_option > len(course_offering_ids):
-                        course_offering_option = int(input("Input the number of your target course offering: "))
-                    course_offering_option -= 1
+                        course_offering_ids = []
+                        course_names = []
+                        listed_course_offering_ids = get_course_offering_ids(specified_period)
+                        for listed_course_offering_id in listed_course_offering_ids:
+                             course_offering_ids.append(listed_course_offering_id[1])
+                             course_names.append(listed_course_offering_id[0])
 
-                    # TODO: FIX IT WHEN YOU GET BACK IT BREAKS HERE
+                        print()
+                        for i in range(len(course_offering_ids)):
+                            print(f"{i + 1}: {course_names[i]} (id: {course_offering_ids[i]})")
+                        print()
 
-                    specified_course_offering_id = course_offering_ids[course_offering_option]
+                        # SHOULD PRINT OUT CLASSES AND THEIR COURSE_OFFERING_ID THAT THE STUDENT IS IN
 
-                    add_student(selected_student_id, specified_course_offering_id)
+                        # COULD FILTER BASED ON PERIOD, COURSE TYPE, COURSE, AND THEN SELECT THE CLASS TO ADD THE STUDENT IN
 
-                    for assignment_id in get_course_offering_assignment_ids(specified_course_offering_id):
-                        add_assignment_grade(selected_student_id, assignment_id[0])
+                        course_offering_option = 0
+                        while course_offering_option < 1 or course_offering_option > len(course_offering_ids):
+                            course_offering_option = int(input("Input the number of your target course offering: "))
+                        course_offering_option -= 1
+
+                        # TODO: FIX IT WHEN YOU GET BACK IT BREAKS HERE
+
+                        specified_course_offering_id = course_offering_ids[course_offering_option]
+
+                        add_student(selected_student_id, specified_course_offering_id)
+
+                        for assignment_id in get_course_offering_assignment_ids(specified_course_offering_id):
+                            add_assignment_grade(selected_student_id, assignment_id[0])
+                    else:
+                        print()
+                        print("This student has a full schedule.")
+                        print()
 
                 elif option == 2:
                     selected_student_id = input("Input a Student ID: ")
 
                     student_course_offerings = get_student_course_offerings(selected_student_id) # desc: course_offering_id, course_name, period
 
+                    print()
                     print("Period| Course Name")
                     print()
                     for student_course_offering in student_course_offerings:
@@ -278,7 +302,6 @@ while user_identity != "quit":
                     assignment_ids = get_course_offering_assignment_ids(target_course_offering_id)
 
                     for assignment_id in assignment_ids:
-                        print(assignment_id)
                         remove_assignment_grade(selected_student_id, assignment_id[0])
 
                 elif option == 3:
@@ -385,6 +408,7 @@ while user_identity != "quit":
                         if arrayed_teacher_id[0] == determined_teacher_id:
                             determined_teacher_name = arrayed_teacher_id[1]
 
+                    print()
                     print("Class added!")
                     print()
                     print("Class Info")
@@ -394,8 +418,17 @@ while user_identity != "quit":
                     print(f"Room: {determined_course_offering_room}")
                     print(f"Teacher: {determined_teacher_name}")
                     print(f"Period: {specified_period}")
+                    print()
+                elif option == 4:
+                    student_name = ""
+                    while student_name == "":
+                        student_name = input("What is the name of the student you want to add? ")
 
-                if option != 4:
+                    add_student_to_system(student_name)
+
+
+
+                if option != 5:
                     option = 0
                 else:
                     print("Goodbye, administrator!")

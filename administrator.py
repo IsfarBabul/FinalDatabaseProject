@@ -12,7 +12,6 @@ def remove_student(student_id, course_offering_id):
 
 def add_class(course_offering_id, course_id, course_offering_room, teacher_id, period):
     statement = ("CALL Add_Class(" + str(course_offering_id) + ", " + str(course_id) + ", '" + course_offering_room + "', " + str(teacher_id) + ", " + str(period) + ")")
-    print(statement)
     return execute_statement(get_database_connection(), statement)
 
 def get_course_offering_ids(specified_period):
@@ -31,6 +30,20 @@ def get_course_offering_assignment_ids(course_offering_id):
 def get_course_offering_general_info(specified_period):
     statement = "CALL Get_Course_Offering_General_Info(" + str(specified_period) + ")"
     return execute_read_statement(get_database_connection(), statement)
+
+def get_student_ids():
+    statement = "CALL Get_Student_Ids()"
+    return execute_read_statement(get_database_connection(), statement)
+
+def add_student_to_system(student_name):
+    unparsed_student_ids = get_student_ids()
+    student_ids = []
+    for unparsed_student_id in unparsed_student_ids:
+        student_ids.append(unparsed_student_id[0])
+    student_id = max(student_ids) + 1
+
+    statement = "CALL Add_Student_To_System(" + str(student_id) + ", '" + student_name + "')"
+    return execute_statement(get_database_connection(), statement)
 
 def get_all_course_offering_general_info():
     all_course_offering_infos = []

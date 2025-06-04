@@ -25,11 +25,12 @@ from administrator import *
 
 # print(arr[0][0])
 
-arr = get_student_ids_by_class(418)
+# arr = get_student_ids_by_class(418)
 
-print(arr)
+# print(arr)
 
-for ar in arr:
-    print(ar[0])
+# for ar in arr:
+#     print(ar[0])
 
+add_student_to_system("wow")
 
